@@ -1,0 +1,122 @@
+<style lang="less">
+@import '../wxParse/wxParse.wxss';
+.topic {
+  &-hd,
+  &-reply,
+  &-bd {
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  &-hd {
+    border-bottom: 1px solid #ccc;
+  }
+  &-title {
+    font-size: 34rpx;
+    display: block;
+  }
+  &-info {
+    font-size: 24rpx;
+    padding-top: 10px;
+  }
+  &-bd {
+    font-size: 28rpx;
+  }
+  // 评论
+  &-replies {
+    background-color: #f8fbf7;
+    width: 100%;
+  }
+  &-reply {
+    border-bottom: 1px solid #e2e2e2;
+    &-avatar {
+      float: left;
+      width: 80rpx;
+      height: 80rpx;
+      border-radius: 5px;
+      overflow: hidden;
+      image {
+        width: 80rpx;
+        height: 80rpx;
+      }
+    }
+    &-info {
+      margin-left: 80rpx;
+      padding-left: 10px;
+    }
+    &-author {
+      font-size: 28rpx;
+    }
+    &-content {
+      display: block;
+      font-size: 24rpx;
+    }
+  }
+}
+</style>
+<template>
+  <view  class="container">
+    <import src="../wxParse/wxParse.wxml" />
+    <view class="topic-hd">
+      <text class="topic-title">{{topic.title}}</text>
+      <view class="topic-info">
+        作者：{{topic.author.loginname}} • 来自：{{tabs[topic.tab]}}
+      </view>
+    </view>
+    <view class="topic-bd">
+      <template is="wxParse" data="{{wxParseData:topic.content.nodes}}"/>
+    </view>
+    <view class="topic-replies">
+      <repeat for="{{topic.replies}}" key="index" index="index" item="reply">
+        <view class="topic-reply">
+          <view class="topic-reply-avatar">
+            <image lazy-load="true" src="{{reply.author.avatar_url}}" alt="{{item.author.loginname}}"></image>
+          </view>
+          <view class="topic-reply-info">
+            <text class="topic-reply-author">{{reply.author.loginname}}</text>
+            <view class="topic-reply-content">
+              {{this}}
+              <template is="wxParse" data="{{wxParseData:reply.content.nodes}}"/>
+            </view>
+          </view>
+        </view>
+      </repeat>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import commonMixin from '../mixins/common.js'
+
+  import WxParse from '../wxParse/wxParse.js'
+
+  export default class Index extends wepy.page {
+    mixins = [commonMixin]
+
+    data = {
+      topicId: null,
+      topic: {},
+      temp: {}
+    }
+    onLoad (options) {
+      this.topicId = options.id
+      wepy.request(`topic/${options.id}`)
+        .then(({data}) => {
+          if (data.success) {
+            this.topic = data.data
+            wepy.setNavigationBarTitle({ title: this.topic.title })
+            this.topic.content = WxParse.wxParse('temp', 'html', this.topic.content, this)
+            this.topic.replies = this.topic.replies.map((reply, index) => {
+              reply.content = WxParse.wxParse('temp', 'html', reply.content, this)
+              return reply
+            })
+            this.$apply()
+          } else {
+            wepy.showModal({
+              title: '错误'
+            })
+          }
+        })
+    }
+  }
+</script>

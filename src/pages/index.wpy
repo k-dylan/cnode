@@ -1,0 +1,123 @@
+<style lang="less">
+  .navbar {
+    display: flex;
+    width: 100%;
+    font-size: 30rpx;
+    border-bottom: 1px solid #ccc;
+    height: 40px;
+    line-height: 40px;
+    background-color: #f6f8f9;
+    &-item {
+      flex-grow: 1;
+      text-align: center;
+      &.on {
+        color: #1aad19;
+        border-bottom: 2px solid #1aad19;
+      }
+    }
+  }
+
+  .list {
+    width: 100%;
+    &-item {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      // topic列表，作者显示
+      &-author {
+        width: 80rpx;
+        image {
+          width: 80rpx;
+          height: 80rpx;
+        }
+      }
+      // 设置文字不换行，超出显示省略号
+      &-bd {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-left: 10px;
+      }
+      // 标题
+      &-title {
+        font-size: 28rpx;
+        white-space: nowrap;
+      }
+      // 访问量
+      &-count {
+        display: block;
+        font-size: 24rpx;
+        color: #888;
+      }
+    }
+  }
+</style>
+<template>
+  <view class="container">
+    <view class="navbar">
+      <repeat for="{{tabs}}" key="key" index="key" item="value">
+        <text @tap="switchTab({{key}})" class="navbar-item {{currentTab === key ? 'on' : ''}}">{{value}}</text>
+      </repeat>
+    </view>
+    <view class="list">
+      <repeat for="{{list}}" key="item.id" index="index" item="item">
+        <view class="list-item">
+          <navigator url="page/index" class="list-item-author">
+            <image lazy-load="true" src="{{item.author.avatar_url}}" alt="{{item.author.loginname}}"></image>
+          </navigator>
+          <navigator url="topic?id={{item.id}}" class="list-item-bd">
+            <text class="list-item-title">{{item.title}}</text>
+            <text class="list-item-count">{{item.reply_count}} / {{item.visit_count}}</text>
+          </navigator>
+        </view>
+      </repeat>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import commonMixin from '../mixins/common.js'
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '首页',
+      enablePullDownRefresh: true
+    }
+    mixins = [commonMixin]
+
+    data = {
+      list: [],
+      currentTab: 'all'
+    }
+
+    methods = {
+      switchTab (tab) {
+        this.currentTab = tab
+        this.loadData(tab)
+      }
+    }
+    // 读取数据
+    loadData (tab) {
+      wepy.showLoading({
+        title: '加载中'
+      })
+      return wepy.request('topics?tab=' + tab).then(({data}) => {
+        this.list = data.data
+        wepy.hideLoading()
+        this.$apply()
+      })
+    }
+
+    onLoad (options) {
+      this.currentTab = options.tab || 'all'
+      this.loadData(this.currentTab)
+    }
+
+    // 下拉刷新
+    onPullDownRefresh () {
+      this.loadData(this.currentTab).then(() => {
+        wepy.stopPullDownRefresh()
+      })
+    }
+  }
+</script>

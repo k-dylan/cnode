@@ -1,0 +1,48 @@
+<style lang="less">
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index',
+      'pages/topic'
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'WeChat',
+      navigationBarTextStyle: 'black'
+    }
+  }
+
+  globalData = {
+    userInfo: null
+  }
+
+  constructor () {
+    super()
+    // 定义拦截器，为api请求添加前缀网址
+    this.$interceptors = {
+      'request': {
+        config (p) {
+          return 'https://cnodejs.org/api/v1/' + p
+        }
+      }
+    }
+    // 使用wepy.xxx的方式将小程序原生api都Promise化
+    this.use('promisify')
+  }
+}
+</script>
