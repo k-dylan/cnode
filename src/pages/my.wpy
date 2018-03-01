@@ -3,12 +3,16 @@
 </style>
 <template>
   <view class="container">
-    用户中心
+    <view class="login">
+      <button @tap="login" type="primary">登录</button>
+    </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import utils from '../utils.js'
+  import request from '../request.js'
   import commonMixin from '../mixins/common.js'
 
   export default class My extends wepy.page {
@@ -18,14 +22,34 @@
     mixins = [commonMixin]
 
     data = {
+      userInfo: {}
     }
 
     methods = {
-
+      login () {
+        let accesstoken = ''
+        wepy.scanCode()
+          .then(res => {
+            utils.showLoading('登录中')
+            accesstoken = res.result
+            return request.login(accesstoken)
+          })
+          .then((data) => {
+            // 将用户信息保存到app对象
+            this.$parent.globalData.userInfo = data
+            this.$parent.globalData.token = accesstoken
+            utils.showSuccess('登录成功')
+          })
+          .catch((err) => {
+            if (err.errMsg === 'scanCode:fail cancel') return false
+            utils.hideLoading()
+            utils.showError('登录失败', '登录失败，请重试')
+          })
+      }
     }
 
     onLoad (options) {
-
+      this.userInfo = this.$parent.globalData.userInfo
     }
   }
 </script>

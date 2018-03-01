@@ -11,6 +11,8 @@
 
 <script>
 import wepy from 'wepy'
+import utils from './utils.js'
+import request from './request.js'
 import 'wepy-async-function'
 
 export default class extends wepy.app {
@@ -60,7 +62,17 @@ export default class extends wepy.app {
   }
 
   globalData = {
-    userInfo: null
+    userInfo: null,
+    token: null
+  }
+
+  onLaunch () {
+    utils.getStorage('token').then(res => {
+      this.globalData.token = res.data
+      return request.login(res.data)
+    }).then(res => {
+      this.globalData.userInfo = res
+    })
   }
 }
 </script>
