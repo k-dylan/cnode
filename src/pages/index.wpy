@@ -6,13 +6,14 @@
     border-bottom: 1px solid #ccc;
     height: 40px;
     line-height: 40px;
-    background-color: #f6f8f9;
+    background-color: #444;
+    color: #ccc;
     &-item {
       flex-grow: 1;
       text-align: center;
       &.on {
-        color: #1aad19;
-        border-bottom: 2px solid #1aad19;
+        color: #fff;
+        border-bottom: 2px solid #fff;
       }
     }
   }
@@ -36,6 +37,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         padding-left: 10px;
+        flex-grow: 1;
       }
       // 标题
       &-title {
@@ -81,13 +83,15 @@
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '首页',
-      enablePullDownRefresh: true
+      enablePullDownRefresh: true,
+      onReachBottomDistance: 100
     }
     mixins = [commonMixin]
 
     data = {
       list: [],
-      currentTab: 'all'
+      currentTab: 'all',
+      page: 1
     }
 
     methods = {
@@ -97,13 +101,14 @@
       }
     }
     // 读取数据
-    loadData (tab) {
+    loadData (tab, page = 1) {
       wepy.showLoading({
         title: '加载中'
       })
-      return wepy.request('topics?tab=' + tab).then(({data}) => {
-        this.list = data.data
+      return wepy.request(`topics?tab=${tab}&limit=20&page=${page}&mdrender=false`).then(({data}) => {
+        this.list = page === 1 ? data.data : this.list.concat(data.data)
         wepy.hideLoading()
+        this.page = page
         this.$apply()
       })
     }
@@ -118,6 +123,11 @@
       this.loadData(this.currentTab).then(() => {
         wepy.stopPullDownRefresh()
       })
+    }
+    // 上拉加载
+    onReachBottom () {
+      this.page ++
+      this.loadData(this.currentTab, this.page)
     }
   }
 </script>

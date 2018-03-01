@@ -13,6 +13,7 @@
   }
   &-title {
     font-size: 34rpx;
+    font-weight: bold;
     display: block;
   }
   &-info {
@@ -100,6 +101,9 @@
     }
     onLoad (options) {
       this.topicId = options.id
+      wepy.showLoading({
+        title: '加载中'
+      })
       wepy.request(`topic/${options.id}`)
         .then(({data}) => {
           if (data.success) {
@@ -116,6 +120,7 @@
               title: '错误'
             })
           }
+          wepy.hideLoading()
         })
     }
   }
