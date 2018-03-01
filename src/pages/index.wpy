@@ -4,8 +4,8 @@
     width: 100%;
     font-size: 30rpx;
     border-bottom: 1px solid #ccc;
-    height: 40px;
-    line-height: 40px;
+    height: 45px;
+    line-height: 45px;
     background-color: #444;
     color: #ccc;
     &-item {

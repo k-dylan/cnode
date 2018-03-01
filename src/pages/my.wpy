@@ -1,0 +1,31 @@
+<style lang="less">
+
+</style>
+<template>
+  <view class="container">
+    用户中心
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import commonMixin from '../mixins/common.js'
+
+  export default class My extends wepy.page {
+    config = {
+      navigationBarTitleText: '用户中心'
+    }
+    mixins = [commonMixin]
+
+    data = {
+    }
+
+    methods = {
+
+    }
+
+    onLoad (options) {
+
+    }
+  }
+</script>
