@@ -78,6 +78,7 @@
 
 <script>
   import wepy from 'wepy'
+  import utils from '../utils.js'
   import commonMixin from '../mixins/common.js'
 
   export default class Index extends wepy.page {
@@ -102,12 +103,10 @@
     }
     // 读取数据
     loadData (tab, page = 1) {
-      wepy.showLoading({
-        title: '加载中'
-      })
+      utils.showLoading()
       return wepy.request(`topics?tab=${tab}&limit=20&page=${page}&mdrender=false`).then(({data}) => {
         this.list = page === 1 ? data.data : this.list.concat(data.data)
-        wepy.hideLoading()
+        utils.hideLoading()
         this.page = page
         this.$apply()
       })

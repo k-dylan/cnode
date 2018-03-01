@@ -87,6 +87,7 @@
 </template>
 <script>
   import wepy from 'wepy'
+  import utils from '../utils.js'
   import commonMixin from '../mixins/common.js'
 
   import WxParse from '../wxParse/wxParse.js'
@@ -101,9 +102,7 @@
     }
     onLoad (options) {
       this.topicId = options.id
-      wepy.showLoading({
-        title: '加载中'
-      })
+      utils.showLoading()
       wepy.request(`topic/${options.id}`)
         .then(({data}) => {
           if (data.success) {
@@ -120,7 +119,7 @@
               title: '错误'
             })
           }
-          wepy.hideLoading()
+          utils.hideLoading()
         })
     }
   }

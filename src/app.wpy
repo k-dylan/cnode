@@ -43,22 +43,24 @@ export default class extends wepy.app {
     }
   }
 
-  globalData = {
-    userInfo: null
-  }
-
   constructor () {
     super()
     // 定义拦截器，为api请求添加前缀网址
     this.$interceptors = {
       'request': {
         config (p) {
-          return 'https://cnodejs.org/api/v1/' + p
+          let obj = typeof p === 'object' ? p : { url: p }
+          obj.url = 'https://cnodejs.org/api/v1/' + obj.url
+          return obj
         }
       }
     }
     // 使用wepy.xxx的方式将小程序原生api都Promise化
     this.use('promisify')
+  }
+
+  globalData = {
+    userInfo: null
   }
 }
 </script>
