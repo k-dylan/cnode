@@ -22,7 +22,8 @@ export default class extends wepy.app {
       'pages/topic',
       'pages/my',
       'pages/my-topic',
-      'pages/my-replies'
+      'pages/my-replies',
+      'pages/my-collect'
     ],
     window: {
       backgroundTextStyle: 'light',

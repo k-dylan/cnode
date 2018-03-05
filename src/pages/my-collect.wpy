@@ -11,15 +11,13 @@
   import topicItem from '../components/topic-item'
   import myMixin from '../mixins/mylist.js'
 
-  export default class MyReplies extends wepy.page {
+  export default class MyCollect extends wepy.page {
     config = {
-      navigationBarTitleText: '我回复的主题'
+      navigationBarTitleText: '我收藏的主题'
     }
     mixins = [ myMixin ]
 
-    apiName = 'getUserDetails'
-
-    dataValue = 'recent_replies'
+    apiName = 'getUserCollect'
 
     components = { topicItem }
   }

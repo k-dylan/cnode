@@ -63,7 +63,7 @@
         <navigator url="/pages/my-topic" class="user-menu-li">
           我的主题
         </navigator>
-        <navigator class="user-menu-li">
+        <navigator url="/pages/my-collect" class="user-menu-li">
           我的收藏
         </navigator>
         <navigator url="/pages/my-replies" class="user-menu-li">

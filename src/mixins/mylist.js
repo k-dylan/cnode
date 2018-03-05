@@ -5,7 +5,7 @@ import topicItem from '../components/topic-item'
 
 export default class commonMixin extends wepy.mixin {
   data = {
-    userData: {}
+    list: {}
   }
 
   components = { topicItem }
@@ -20,9 +20,9 @@ export default class commonMixin extends wepy.mixin {
 
     utils.showLoading()
 
-    request.getUserDetails(loginname)
+    request[this.apiName](loginname)
       .then(({data}) => {
-        this.userData = data.data
+        this.list = this.dataValue ? data.data[this.dataValue] : data.data
         this.$apply()
         utils.hideLoading()
       })
