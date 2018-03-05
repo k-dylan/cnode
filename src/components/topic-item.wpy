@@ -1,0 +1,58 @@
+<style lang="less">
+  .list {
+    width: 100%;
+    &-item {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      // topic列表，作者显示
+      &-author {
+        width: 80rpx;
+        image {
+          width: 80rpx;
+          height: 80rpx;
+        }
+      }
+      // 设置文字不换行，超出显示省略号
+      &-bd {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-left: 10px;
+        flex-grow: 1;
+      }
+      // 标题
+      &-title {
+        font-size: 28rpx;
+        white-space: nowrap;
+      }
+      // 访问量
+      &-count {
+        display: block;
+        font-size: 24rpx;
+        color: #888;
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="list-item">
+    <navigator url="page/index" class="list-item-author">
+      <image lazy-load="true" src="{{item.author.avatar_url}}" alt="{{item.author.loginname}}"></image>
+    </navigator>
+    <navigator url="topic?id={{item.id}}" class="list-item-bd">
+      <text class="list-item-title">{{item.title}}</text>
+      <text class="list-item-count">{{item.reply_count}} / {{item.visit_count}}</text>
+    </navigator>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class TopicItem extends wepy.component {
+    props = {
+      item: Object
+    }
+  }
+</script>
