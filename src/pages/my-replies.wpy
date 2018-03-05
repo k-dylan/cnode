@@ -1,6 +1,6 @@
 <template>
   <view class="list">
-    <repeat for="{{userData.recent_topics}}" key="item.id" index="index" item="item">
+    <repeat for="{{userData.recent_replies}}" key="item.id" index="index" item="item">
       <topicItem :item="item"></topicItem>
     </repeat>
   </view>
@@ -11,9 +11,9 @@
   import topicItem from '../components/topic-item'
   import myMixin from '../mixins/mylist.js'
 
-  export default class MyTopic extends wepy.page {
+  export default class MyReplies extends wepy.page {
     config = {
-      navigationBarTitleText: '我的主题'
+      navigationBarTitleText: '我最近回复的主题'
     }
     mixins = [ myMixin ]
 

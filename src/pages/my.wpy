@@ -63,12 +63,12 @@
         <navigator url="/pages/my-topic" class="user-menu-li">
           我的主题
         </navigator>
-        <view class="user-menu-li">
+        <navigator class="user-menu-li">
           我的收藏
-        </view>
-        <view class="user-menu-li">
+        </navigator>
+        <navigator url="/pages/my-replies" class="user-menu-li">
           我的回复
-        </view>
+        </navigator>
       </view>
     </view>
   </view>
