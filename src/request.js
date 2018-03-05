@@ -3,7 +3,7 @@
  * @Author: kdylan
  * @Date: 2018-03-01 17:12:05
  * @Last Modified by: kdylan
- * @Last Modified time: 2018-03-01 17:20:32
+ * @Last Modified time: 2018-03-05 14:22:11
  */
 
 import wepy from 'wepy'
@@ -32,5 +32,13 @@ export default {
       utils.hideLoading()
       utils.showError('登录失败', '登录失败，请重试')
     })
+  },
+
+  /**
+   * 获取用户详情
+   * @param {String} loginname 用户登录名
+   */
+  getUserDetails (loginname) {
+    return wepy.request(`user/${loginname}`)
   }
 }

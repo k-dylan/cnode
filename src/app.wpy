@@ -20,7 +20,8 @@ export default class extends wepy.app {
     pages: [
       'pages/index',
       'pages/topic',
-      'pages/my'
+      'pages/my',
+      'pages/my-topic'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -47,18 +48,23 @@ export default class extends wepy.app {
 
   constructor () {
     super()
-    // 定义拦截器，为api请求添加前缀网址
-    this.$interceptors = {
-      'request': {
-        config (p) {
-          let obj = typeof p === 'object' ? p : { url: p }
-          obj.url = 'https://cnodejs.org/api/v1/' + obj.url
-          return obj
-        }
-      }
-    }
     // 使用wepy.xxx的方式将小程序原生api都Promise化
     this.use('promisify')
+  }
+
+  // 定义拦截器，为api请求添加前缀网址
+  $interceptors = {
+    'request': {
+      config (p) {
+        let obj = typeof p === 'object' ? p : { url: p }
+        obj.url = 'https://cnodejs.org/api/v1/' + obj.url
+        return obj
+      }
+    }
+  }
+
+  data = {
+    isLogined: false
   }
 
   globalData = {
@@ -66,12 +72,20 @@ export default class extends wepy.app {
     token: null
   }
 
+  login (token) {
+    return request.login(token)
+      .then(res => {
+        console.log(res.loginname + '登录成功！')
+        this.globalData.userInfo = res
+        this.loginedCallback && this.loginedCallback(res)
+      })
+  }
+
   onLaunch () {
+    // 读取用户保存的token
     utils.getStorage('token').then(res => {
       this.globalData.token = res.data
-      return request.login(res.data)
-    }).then(res => {
-      this.globalData.userInfo = res
+      this.login(res.data)
     })
   }
 }

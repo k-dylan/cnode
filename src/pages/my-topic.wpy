@@ -1,0 +1,47 @@
+<style lang="less">
+
+</style>
+
+<template>
+  <view class="list">
+    <repeat for="{{list}}" key="item.id" index="index" item="item">
+      <topicItem :item="item"></topicItem>
+    </repeat>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import topicItem from '../components/topic-item'
+  import utils from '../utils.js'
+  import request from '../request.js'
+
+  export default class MyTopic extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的主题'
+    }
+    components = { topicItem }
+
+    data = {
+      list: []
+    }
+
+    onLoad () {
+      if (this.$parent.globalData.userInfo === null) {
+        return utils.showError('您还未登录，请登录！').then(() => {
+          wepy.navigateBack({delta: 1})
+        })
+      }
+      let loginname = this.$parent.globalData.userInfo.loginname
+
+      utils.showLoading()
+
+      request.getUserDetails(loginname)
+        .then(({data}) => {
+          this.list = data.data.recent_topics
+          this.$apply()
+          utils.hideLoading()
+        })
+    }
+  }
+</script>

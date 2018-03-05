@@ -17,6 +17,9 @@
       &-bd {
         overflow: hidden;
         text-overflow: ellipsis;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         padding-left: 10px;
         flex-grow: 1;
       }
@@ -42,7 +45,9 @@
     </navigator>
     <navigator url="topic?id={{item.id}}" class="list-item-bd">
       <text class="list-item-title">{{item.title}}</text>
-      <text class="list-item-count">{{item.reply_count}} / {{item.visit_count}}</text>
+      <block wx:if="{{item.reply_count !== undefined}}">
+        <text class="list-item-count">{{item.reply_count}} / {{item.visit_count}}</text>
+      </block>
     </navigator>
   </view>
 </template>
